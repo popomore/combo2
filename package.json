@@ -1,0 +1,19 @@
+{
+  "name": "combo2",
+  "version": "0.1.0",
+  "description": "A simple assets combo server.",
+  "author": "popomore <sakura9515@gmail.com>",
+  "dependencies": {
+    "commander": "~2.0.0",
+    "connect": "~2.11.0",
+    "connect-combo": "~0.2.0"
+  },
+  "bin": {
+    "combo": "bin/combo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/popomore/combo2.git"
+  },
+  "license": "MIT"
+}

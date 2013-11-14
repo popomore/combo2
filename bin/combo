@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+
+var commander = require('commander');
+var connect = require('connect');
+var combo = require('connect-combo');
+
+commander
+  .version(require('../package.json').version)
+  .option('-v, --verbose', 'Show log.')
+  .option('-p, --port [port]', 'the server port')
+  .option('-d, --directory [directory]', 'the watched directory')
+  .option('-r, --remote [remote]', 'the remote proxy')
+  .parse(process.argv);
+
+/*
+  create options
+*/
+
+var options = extend({
+  directory: process.cwd(),
+  remote: false,
+  verbose: false,
+  port: 8080
+}, commander);
+
+/*
+  make server
+*/
+
+connect()
+  .use(combo({
+    directory: options.directory,
+    proxy: options.remote,
+    cache: true,
+    log: options.verbose
+  }))
+  .use(function(req, res, next) {
+    log('>> Request ' + req.url);
+    next();
+  })
+  .use(connect.static(options.directory))
+  .use(function(req, res) {
+    log('>> Not Found ' + req.url);
+    res.end('404');
+  })
+  .listen(options.port);
+console.log('Server running at http://127.0.0.1:' + options.port + '/');
+
+function log(str) {
+  options.verbose && console.log(str);
+}
+
+function extend(to, from) {
+  var result = {};
+  for (var i in to) {
+    result[i] = from[i] ? from[i] : to[i];
+  }
+  return result;
+}
